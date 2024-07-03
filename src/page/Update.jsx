@@ -1,46 +1,34 @@
+import { useNavigate, useParams } from "react-router-dom";
 import { useFormik } from "formik";
 import React, { useContext, useEffect, useState } from "react";
 import { FormValidation } from "../utils/FormValidation";
 import usersContext from "../context/usersContext";
-import { v4 as uuidv4 } from "uuid"; 
 
-const Home = () => {
-  const {setUsers} = useContext(usersContext)
+const Edit = () => {
+  const { id } = useParams();
+  const nav = useNavigate();
+
+  const { users, setUsers } = useContext(usersContext);
+  const [currentUser, setCurrentUser] = useState();
   const [countries, setCountries] = useState([]);
 
-    //   Image Conversion
+  //   Image Conversion
   const convertToBase64 = (file) => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => resolve(reader.result);
-      reader.onerror = error => reject(error);
+      reader.onerror = (error) => reject(error);
     });
   };
 
-  // Formik Form Validation
-  const { values, handleBlur, handleChange, handleSubmit, errors, setFieldValue, resetForm } = useFormik({
-    initialValues: {
-      id :uuidv4().substring(0, 6),
-      fullname: "",
-      email: "",
-      phonenumber: "",
-      dob: "",
-      city: "",
-      district: "",
-      province: "",
-      country: "Nepal",
-      image: null,
-    },
-    validationSchema: FormValidation,
-    onSubmit: async (values) => {
-        if (values.image) {
-        values.image = await convertToBase64(values.image);
-      }
-        setUsers((prev)=>[...prev,{...values}])
-        resetForm(); 
-    },
-  });
+  // Fetch user data based on ID
+  useEffect(() => {
+    const user = users.find((user) => user.id === id);
+    if (user) {
+      setCurrentUser(user);
+    }
+  }, [id, users]);
 
   // Fetch countries data from API
   useEffect(() => {
@@ -53,16 +41,55 @@ const Home = () => {
       .catch((error) => console.error("Error fetching countries:", error));
   }, []);
 
+  // Formik setup
+  const formik = useFormik({
+    initialValues: {
+      fullname: currentUser?.fullname || "",
+      email: currentUser?.email || "",
+      phonenumber: currentUser?.phonenumber || "",
+      dob: currentUser?.dob || "",
+      city: currentUser?.city || "",
+      district: currentUser?.district || "",
+      province: currentUser?.province || "",
+      country: currentUser?.country || "Nepal",
+      image: null,
+    },
+    enableReinitialize: true,
+    validationSchema: FormValidation,
+    onSubmit: async (values) => {
+      if (values.image) {
+        values.image = await convertToBase64(values.image);
+      }
+      setUsers((prev) =>
+        prev.map((user) => (user.id === id ? { ...user, ...values } : user))
+      );
+      nav("/");
+    },
+  });
+
+  const {
+    handleBlur,
+    handleChange,
+    handleSubmit,
+    setFieldValue,
+    errors,
+    values,
+  } = formik;
+
+  if (!currentUser) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="container mx-auto">
       <div className="p-4 rounded-md ">
         {/* Heading */}
-        <h2 className="text-3xl font-bold">Add User</h2>
-        <p className="text-lg">Fill the form to add users</p>
+        <h2 className="text-3xl font-bold">Update User</h2>
+        <p className="text-lg">Fill the form to update user</p>
 
         {/* User Form */}
         <form
-          className="mt-4 grid items-center grid-cols-6 gap-3 bg-[#2f2f2f] p-6 rounded-md"
+          className="mt-6 grid items-center grid-cols-6 gap-3 bg-[#2f2f2f] p-6 rounded-md"
           onSubmit={handleSubmit}
         >
           {/* Full Name */}
@@ -77,7 +104,7 @@ const Home = () => {
             <input
               onChange={handleChange}
               onBlur={handleBlur}
-              value={values.fullname}
+              value={values?.fullname}
               type="text"
               id="fullname"
               name="fullname"
@@ -105,7 +132,7 @@ const Home = () => {
             <input
               onChange={handleChange}
               onBlur={handleBlur}
-              value={values.email}
+              value={values?.email}
               type="email"
               id="email"
               name="email"
@@ -133,7 +160,7 @@ const Home = () => {
             <input
               onChange={handleChange}
               onBlur={handleBlur}
-              value={values.phonenumber}
+              value={values?.phonenumber}
               type="text"
               id="phonenumber"
               name="phonenumber"
@@ -161,7 +188,7 @@ const Home = () => {
             <input
               onChange={handleChange}
               onBlur={handleBlur}
-              value={values.dob}
+              value={values?.dob}
               type="date"
               id="dob"
               name="dob"
@@ -188,7 +215,7 @@ const Home = () => {
             <input
               onChange={handleChange}
               onBlur={handleBlur}
-              value={values.city}
+              value={values?.city}
               type="text"
               id="city"
               name="city"
@@ -216,7 +243,7 @@ const Home = () => {
             <input
               onChange={handleChange}
               onBlur={handleBlur}
-              value={values.district}
+              value={values?.district}
               type="text"
               id="district"
               name="district"
@@ -244,7 +271,7 @@ const Home = () => {
             <select
               onChange={handleChange}
               onBlur={handleBlur}
-              value={values.province}
+              value={values?.province}
               id="province"
               name="province"
               placeholder="See"
@@ -296,7 +323,7 @@ const Home = () => {
             <select
               onChange={handleChange}
               onBlur={handleBlur}
-              value={values.country}
+              value={values?.country}
               name="country"
               id="country"
               className="mt-2 w-full rounded-md h-10 p-2 outline-none dark:text-white border-[#7a7a7a] bg-inherit border"
@@ -360,7 +387,7 @@ const Home = () => {
               type="submit"
               className="w-full bg-green-500 text-white rounded-md h-10 hover:opacity-80"
             >
-              Add User
+              Update User
             </button>
           </div>
         </form>
@@ -369,4 +396,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Edit;

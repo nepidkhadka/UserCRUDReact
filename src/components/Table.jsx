@@ -1,17 +1,20 @@
 import React, { useContext, useState } from "react";
 import usersContext from "../context/usersContext";
 import Pagination from "./Pagination";
+import { Link } from "react-router-dom";
 
 const Table = () => {
   const { users, setUsers } = useContext(usersContext);
-
+  
+  // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [postperpage, setPostPerPage] = useState(5);
-
   const lastPostIndex = currentPage * postperpage;
   const firstPostIndex = lastPostIndex - postperpage;
   const currentUserData = users.slice(firstPostIndex, lastPostIndex)
 
+
+  // Delete Function
   const handleDelete = (id) => { 
     let confirm = window.confirm("Delete User ?");
     if (confirm) {
@@ -19,7 +22,6 @@ const Table = () => {
     }
   };
 
-  console.log(currentUserData);
   return (
     <div className="container mx-auto">
       <div className="relative overflow-x-auto shadow-md p-4">
@@ -88,12 +90,7 @@ const Table = () => {
                   <td className="px-6 py-4 capitalize">{user.province}</td>
                   <td className="px-6 py-4 capitalize">{user.country}</td>
                   <td className="px-6 py-4">
-                    <a
-                      href="#"
-                      className="font-medium text-yellow-600 hover:underline cursor-pointer"
-                    >
-                      Edit
-                    </a>
+                    <Link to={"/update/" + user.id} className='font-medium text-yellow-600 hover:underline cursor-pointer'>Edit</Link>
                   </td>
                   <td className="px-6 py-4 cursor-pointer">
                     <a
