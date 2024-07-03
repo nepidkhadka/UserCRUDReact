@@ -17,6 +17,9 @@ export const FormValidation = Yup.object().shape({
   country: Yup.string().required("Country is required"),
   image: Yup.mixed()
     .required("Image is required")
+    .test("fileSize", "Image must be less than 1MB", (value) => {
+        return value && value.size <= 1000000;
+    })  
     .test(
       "fileFormat",
       "Unsupported Format. Only PNG files are allowed.",

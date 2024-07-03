@@ -8,6 +8,16 @@ const Home = () => {
   const {setUsers} = useContext(usersContext)
   const [countries, setCountries] = useState([]);
 
+    //   Image Conversion
+  const convertToBase64 = (file) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = error => reject(error);
+    });
+  };
+
   // Formik Form Validation
   const { values, handleBlur, handleChange, handleSubmit, errors, setFieldValue, resetForm } = useFormik({
     initialValues: {
@@ -23,7 +33,10 @@ const Home = () => {
       image: null,
     },
     validationSchema: FormValidation,
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
+        if (values.image) {
+        values.image = await convertToBase64(values.image);
+      }
         setUsers((prev)=>[...prev,{...values}])
         resetForm(); 
     },
@@ -237,7 +250,7 @@ const Home = () => {
               placeholder="See"
               className="mt-2 w-full rounded-md h-10 p-2 outline-none dark:text-white border-[#7a7a7a] bg-inherit border"
             >
-              <option className="bg-[#252d3c]" hidden selected>
+              <option className="bg-[#252d3c]" hidden>
                 Select Your Province.......
               </option>
               <option className="bg-[#252d3c]" value="Madhesh">
