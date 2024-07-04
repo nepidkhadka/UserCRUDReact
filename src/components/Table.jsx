@@ -1,12 +1,14 @@
 import React, { useContext, useState } from "react";
 import usersContext from "../context/usersContext";
 import Pagination from "./Pagination";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Table = () => {
   const { users, setUsers } = useContext(usersContext);
+  const nav = useNavigate()
   
   // Pagination
+  
   const [currentPage, setCurrentPage] = useState(1);
   const [postperpage, setPostPerPage] = useState(5);
   const lastPostIndex = currentPage * postperpage;
@@ -109,6 +111,13 @@ const Table = () => {
         <Pagination postPerPage={postperpage} totalPosts={users.length} setCurrentPage={setCurrentPage} currentPage={currentPage} />
 
       </div>
+
+      {/* Profile Button */}
+
+      <div className="my-6 mx-auto text-center">
+        <button onClick={()=> nav("/profiles")} className="bg-yellow-500 py-3 px-5 rounded-lg border border-transparent hover:bg-transparent hover:border-white"> Profiles </button>
+      </div>
+
     </div>
   );
 };

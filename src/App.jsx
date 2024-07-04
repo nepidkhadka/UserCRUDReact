@@ -4,22 +4,21 @@ import { UsersProvider } from "./context/usersContext";
 import Table from "./components/Table";
 import Update from "./page/Update";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Profiles from "./page/Profiles";
 
 const App = () => {
   return (
     <UsersProvider>
       <BrowserRouter>
         <Routes>
-          <Route
-            path="/"
-            element={
-              <>
+          <Route path="/" element={<> 
                 <Home />
                 <Table />
               </>
             }
           />
           <Route path="/update/:id" element={<Update/>} />
+          <Route path="/profiles/" element={<Profiles/>} />
           <Route path="/*" element={<h1 className="h-screen grid place-items-center text-3xl font-bold">Error!!! Page Not Found</h1>} />
         </Routes>
       </BrowserRouter>

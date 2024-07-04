@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useFormik } from "formik";
 import React, { useContext, useEffect, useState } from "react";
 import { FormValidation } from "../utils/FormValidation";
@@ -82,7 +82,7 @@ const Edit = () => {
 
   return (
     <div className="container mx-auto">
-      <div className="p-4 rounded-md ">
+      <div className="p-4 rounded-md mt-4">
         {/* Heading */}
         <h2 className="text-3xl font-bold">Update User</h2>
         <p className="text-lg">Fill the form to update user</p>
@@ -382,13 +382,19 @@ const Edit = () => {
           </div>
 
           {/* Action Button */}
-          <div className="col-span-6">
+          <div className="col-span-6 sm:col-span-4">
             <button
               type="submit"
-              className="w-full bg-green-500 text-white rounded-md h-10 hover:opacity-80"
+              className="bg-green-500 w-full text-white rounded-md h-10 hover:opacity-80"
             >
               Update User
             </button>
+          </div>
+          <div className="col-span-6 sm:col-span-2 sm:ml-auto">
+            <Link to={"/"}              
+              className="w-full inline-block text-center bg-red-500 text-white rounded-md p-2 hover:opacity-80">
+              Cancel Update
+            </Link>
           </div>
         </form>
       </div>

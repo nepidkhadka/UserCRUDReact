@@ -21,7 +21,7 @@ const Home = () => {
   // Formik Form Validation
   const { values, handleBlur, handleChange, handleSubmit, errors, setFieldValue, resetForm } = useFormik({
     initialValues: {
-      id :uuidv4().substring(0, 6),
+      id :uuidv4().substring(0, 10),
       fullname: "",
       email: "",
       phonenumber: "",
