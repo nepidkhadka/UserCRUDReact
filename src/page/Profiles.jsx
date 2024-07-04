@@ -14,6 +14,7 @@ const Profiles = () => {
                     <Link className='text-2xl font-semibold ' to={"/"}> 🏠Home</Link>
                 </div>
                 {/* Table */}
+                <div className="relative overflow-x-auto shadow-md p-4">
                 <table className="w-full text-sm text-left rtl:text-right bg-[#2f2f2f] text-white rounded-md">
                     <thead className="text-xm text-gray-700 uppercase bg-gray-50 ">
                         <tr>
@@ -89,6 +90,8 @@ const Profiles = () => {
                             ))}
                     </tbody>
                 </table>
+                </div>
+
             </div>
 
         </div>
